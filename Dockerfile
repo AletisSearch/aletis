@@ -1,5 +1,8 @@
 FROM oven/bun:latest AS builder-bun
 WORKDIR /aletis
+COPY ./web/package.json ./package.json
+COPY ./web/bun.lock ./bun.lock
+RUN bun install
 COPY ./web .
 RUN bun run build
 
