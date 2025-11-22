@@ -3,17 +3,17 @@ package main
 import (
 	"log/slog"
 	"os"
-	"strings"
+	"time"
+
+	"github.com/AletisSearch/aletis"
 )
 
 func main() {
-	slog.Info(trimGetEnv("PORT"))
-	slog.Info(trimGetEnv("PUBLIC"))
-	slog.Info(trimGetEnv("AI_ENABLED"))
-	slog.Info(trimGetEnv("OPENAI_URL"))
-	slog.Info(trimGetEnv("OPENAI_API_KEY"))
-	slog.Info(trimGetEnv("SEARXNG_HOST"))
-}
-func trimGetEnv(key string) string {
-	return strings.TrimSpace(os.Getenv(key))
+	location, _ := time.LoadLocation("UTC")
+	time.Local = location
+
+	if err := aletis.Start(aletis.EnvConfigOptions()...); err != nil {
+		slog.Error("application exited with an error", "ERR", err)
+		os.Exit(1)
+	}
 }
