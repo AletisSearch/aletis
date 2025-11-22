@@ -5,11 +5,11 @@
 package db
 
 import (
-	"github.com/jackc/pgx/v5/pgtype"
+	"time"
 )
 
 type Cache struct {
 	Key     string
 	Data    []byte
-	Expires pgtype.Timestamptz
+	Expires time.Time
 }

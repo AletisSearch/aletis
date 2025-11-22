@@ -27,15 +27,16 @@ func Start(options ...Option) error {
 	}
 
 	// Database
+	if err = applyMigrations(conf); err != nil {
+		return err
+	}
+
 	database, err := pgxpool.New(ctx, conf.DBconnStr())
 	if err != nil {
 		return err
 	}
 	err = database.Ping(ctx)
 	if err != nil {
-		return err
-	}
-	if err = applyMigrations(conf); err != nil {
 		return err
 	}
 
@@ -48,9 +49,9 @@ func Start(options ...Option) error {
 			case <-t:
 				ctxLimit, cancel := context.WithTimeout(ctx, time.Second*30)
 				defer cancel()
-				err := queries.DeleteOld(ctxLimit, pgtype.Timestamptz{Time: time.Now()})
+				err := queries.DeleteOld(ctxLimit, time.Now())
 				if err != nil {
-					slog.Error("err running DB Cleanup", "Error", err)
+					slog.Error("err running DB Cleanup", "ERR", err)
 				}
 			case <-ctx.Done():
 				slog.Info("Closing DB Cleanup")

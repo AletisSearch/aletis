@@ -7,15 +7,14 @@ package db
 
 import (
 	"context"
-
-	"github.com/jackc/pgx/v5/pgtype"
+	"time"
 )
 
 const deleteOld = `-- name: DeleteOld :exec
 DELETE FROM cache WHERE expires <= $1
 `
 
-func (q *Queries) DeleteOld(ctx context.Context, expires pgtype.Timestamptz) error {
+func (q *Queries) DeleteOld(ctx context.Context, expires time.Time) error {
 	_, err := q.db.Exec(ctx, deleteOld, expires)
 	return err
 }
@@ -27,7 +26,7 @@ WHERE key = $1 LIMIT 1
 
 type GetCacheRow struct {
 	Data    []byte
-	Expires pgtype.Timestamptz
+	Expires time.Time
 }
 
 // Cache queries using hstore for key-value data storage
@@ -49,7 +48,7 @@ ON CONFLICT(key) DO UPDATE SET
 type InsertCacheParams struct {
 	Key     string
 	Data    []byte
-	Expires pgtype.Timestamptz
+	Expires time.Time
 }
 
 func (q *Queries) InsertCache(ctx context.Context, arg InsertCacheParams) error {
