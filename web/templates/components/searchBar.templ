@@ -7,7 +7,7 @@ type SearchBarOptions struct {
 templ SearchBar(o SearchBarOptions) {
 	<form action="/search" method="get" class="flex w-full p-2 border-2 rounded-lg bg-neutral-900 border-neutral-700 grow">
 		<label for="q" class="sr-only">Search</label>
-		<input type="text" name="q" id="q" size="1" value={ o.Value } class="flex-1 p-1 border-0 border-none outline-none items-center-safe placeholder:text-white" placeholder="Search..." required/>
+		<input type="text" name="q" id="q" size="1" value={ o.Value } class="flex-1 p-1 border-0 border-none outline-none items-center-safe placeholder:text-white" placeholder="Search..." required autofocus/>
 		<input type="submit" value="Submit" class="bg-blue-700 hover:bg-blue-800 py-1 px-1.5 cursor-pointer rounded-lg"/>
 	</form>
 }
