@@ -3,6 +3,7 @@ package aletis
 import (
 	"context"
 	"log/slog"
+	"net/http"
 	"sync"
 	"time"
 
@@ -33,6 +34,15 @@ func NewApp(ctx context.Context, wg *sync.WaitGroup, conf *Config, q *db.Queries
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.CleanPath)
+	r.Use(middleware.SetHeader("X-Frame-Options", "DENY"))
+	r.Use(middleware.SetHeader("X-Content-Type-Options", "nosniff"))
+	r.Use(middleware.SetHeader("Referrer-Policy", "strict-origin-when-cross-origin"))
+	//r.Use(middleware.SetHeader("Strict-Transport-Security", "max-age=63072000; includeSubDomains; preload"))
+	r.Use(middleware.SetHeader("Cross-Origin-Opener-Policy", "same-origin"))
+	r.Use(middleware.SetHeader("Cross-Origin-Embedder-Policy", "require-corp"))
+	r.Use(middleware.SetHeader("Cross-Origin-Resource-Policy", "same-site"))
+	r.Use(middleware.SetHeader("Permissions-Policy", "geolocation=(), camera=(), microphone=(), interest-cohort=()"))
+
 	r.Get("/", handlers.Home())
 	r.Route("/search", func(r chi.Router) {
 		if conf.Public {
@@ -42,5 +52,13 @@ func NewApp(ctx context.Context, wg *sync.WaitGroup, conf *Config, q *db.Queries
 	})
 	r.Get("/icons/{domain}", handlers.Icons(q))
 	r.Handle("/assets/*", handlers.Assets(conf.Dev))
+
+	r.Get("/robots.txt", func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Cache-Control", "public, max-age=3600")
+		w.Write([]byte(`User-agent: *
+Disallow: /search
+Disallow: /icons
+Disallow: /assets`))
+	})
 	return r, nil
 }
