@@ -3,6 +3,7 @@ WORKDIR /go/src/github.com/AletisSearch/aletis
 COPY go.* ./
 RUN go mod download
 COPY . .
+ENV GOEXPERIMENT="jsonv2"
 RUN --mount=type=cache,target=/root/.cache/go-build go build -ldflags="-s -w" -o ./cmd/aletis/aletis.so ./cmd/aletis
 
 # Docker build

@@ -4,15 +4,18 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
+	"net/http"
 	"net/url"
+	"os"
+	"os/signal"
 	"sync"
+	"syscall"
 	"time"
 
 	sqlcdb "github.com/AletisSearch/aletis/db"
 	"github.com/AletisSearch/aletis/internal/db"
 	"github.com/amacneil/dbmate/v2/pkg/dbmate"
 	_ "github.com/amacneil/dbmate/v2/pkg/driver/postgres"
-	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -59,7 +62,49 @@ func Start(options ...Option) error {
 			}
 		}
 	})
-	wg.Done()
+
+	router, err := NewApp(ctx, &wg, conf, queries)
+	if err != nil {
+		return fmt.Errorf("failed to create app: %w", err)
+	}
+
+	serverErrChan := make(chan error, 1)
+
+	addr := ":" + conf.Port
+	server := &http.Server{
+		Addr:    addr,
+		Handler: router,
+	}
+
+	go func() {
+		slog.Info("server listening", "addr", addr)
+		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			serverErrChan <- err
+		}
+	}()
+
+	quitChan := make(chan os.Signal, 1)
+	signal.Notify(quitChan, syscall.SIGINT, syscall.SIGTERM)
+
+	select {
+	case err := <-serverErrChan:
+		slog.Error("unexpected server error", "ERR", err)
+	case sig := <-quitChan:
+		slog.Info("received signal", "signal", sig)
+	}
+
+	ctxTmt, cancelTmt := context.WithTimeout(ctx, time.Second*15)
+	defer cancelTmt()
+
+	slog.Info("shutting server down...")
+	if err = server.Shutdown(ctxTmt); err != nil {
+		slog.Error("shutting down server", "ERR", err)
+	}
+
+	cancel()
+
+	wg.Wait()
+
 	return nil
 }
 func applyMigrations(conf *Config) error {

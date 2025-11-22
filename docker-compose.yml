@@ -16,6 +16,7 @@ services:
       POSTGRES_USERNAME: "aletis"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
       # # Defaults
+      # DEV: false
       # PORT: 8080
       # PUBLIC: true
       # AI_ENABLED: false
@@ -30,7 +31,7 @@ services:
     env_file:
       - .env
     volumes:
-      - "./data/postgres:/var/lib/postgresql/18/docker:z"
+      - "postgres_data:/var/lib/postgresql/18/docker:z"
     expose:
       - 5432
     restart: always
@@ -38,3 +39,5 @@ services:
       POSTGRES_USER: "aletis"
       POSTGRES_DB: "aletis"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+volumes:
+  postgres_data:

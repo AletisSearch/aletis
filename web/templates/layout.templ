@@ -1,0 +1,26 @@
+package templates
+
+import "github.com/AletisSearch/aletis/web"
+
+templ main(body templ.Component) {
+	<main id="main" class="flex flex-1 grow font-sans text-base sm:text-lg">
+		@body
+	</main>
+}
+
+templ Layout(head, body templ.Component) {
+	<!DOCTYPE html>
+	<html lang="en">
+		<head>
+			<meta charset="UTF-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+			@head
+			<link rel="stylesheet" href={ web.GetAssetUri("main.css") }/>
+		</head>
+		<body class="bg-neutral-950 text-neutral-200 flex min-h-screen min-w-full">
+			<div class="mx-auto flex grow flex-col px-3 sm:px-6">
+				@main(body)
+			</div>
+		</body>
+	</html>
+}

@@ -6,9 +6,12 @@ import (
 	"os"
 	"strconv"
 	"strings"
+
+	"github.com/AletisSearch/aletis/web"
 )
 
 type Config struct {
+	Dev              bool
 	Port             string
 	OpenAIKey        string
 	OpenAIURL        string
@@ -23,6 +26,17 @@ type Config struct {
 }
 
 type Option func(*Config) error
+
+func WithDevString(dev string) Option {
+	return func(c *Config) error {
+		boolValue, err := strconv.ParseBool(dev)
+		if err != nil {
+			return fmt.Errorf("unable to parse dev environment variable: %w", err)
+		}
+		c.Dev = boolValue
+		return nil
+	}
+}
 
 func WithPort(port string) Option {
 	return func(c *Config) error {
@@ -113,6 +127,9 @@ func EnvConfigOptions() []Option {
 	confOptions := []Option{
 		WithSearxngHost(trimGetEnv("SEARXNG_HOST")),
 	}
+	if dev, exist := trimLookupEnv("DEV"); exist {
+		confOptions = append(confOptions, WithDevString(dev))
+	}
 	if addr, exist := trimLookupEnv("PORT"); exist {
 		confOptions = append(confOptions, WithPort(addr))
 	}
@@ -161,6 +178,7 @@ func trimLookupEnv(key string) (string, bool) {
 
 func NewConfig(options ...Option) (*Config, error) {
 	conf := &Config{
+		Dev:              false,
 		Port:             "8080",
 		Public:           true,
 		AIEnabled:        false,
@@ -203,6 +221,7 @@ func NewConfig(options ...Option) (*Config, error) {
 		return nil, errors.New("POSTGRES_PASSWORD is not set")
 	}
 
+	web.IsDev = conf.Dev
 	return conf, nil
 }
 func (c *Config) DBconnStr() string {

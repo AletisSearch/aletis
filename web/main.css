@@ -1,0 +1,8 @@
+@import "tailwindcss";
+
+@source "./templates";
+
+.link {
+  @apply text-blue-500 hover:text-blue-600 visited:text-indigo-500 visited:hover:text-indigo-600;
+  @apply cursor-pointer;
+}

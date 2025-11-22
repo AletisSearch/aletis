@@ -1,0 +1,96 @@
+package search
+
+import (
+	"fmt"
+	"github.com/AletisSearch/aletis/internal/searxng"
+	"github.com/AletisSearch/aletis/web/templates/components"
+	"strings"
+)
+
+templ Head() {
+	<title>Search</title>
+	<meta name="description" content="Search"/>
+}
+
+templ Body(query string, data chan templ.Component) {
+	<div class="flex flex-col grow shrink">
+		<div action="/search" method="get" class="md:grid md:grid-cols-8">
+			<div class="flex items-center md:justify-end-safe md:pr-8">
+				<h1><a href="/" class="text-lg font-bold md:text-xl">Aletis</a></h1>
+			</div>
+			<div class="md:col-span-6 lg:col-span-5">
+				@components.SearchBar(components.SearchBarOptions{Value: query})
+			</div>
+		</div>
+		<div class="md:grid md:grid-cols-8">
+			@templ.Flush() {
+				<template shadowrootmode="open">
+					<link rel="stylesheet" href="/assets/output.css"/>
+					<slot name="recommendations">
+						<div class="md:col-start-2 md:col-span-6 lg:col-start-2 lg:col-span-5">Loading Recommendations...</div>
+					</slot>
+					<slot name="results">
+						<div class="md:col-start-2 md:col-span-6 lg:col-start-2 lg:col-span-5">Loading Results...</div>
+					</slot>
+				</template>
+			}
+			for tc := range data {
+				@templ.Flush() {
+					@tc
+				}
+			}
+		</div>
+	</div>
+}
+
+templ Recommendations(r []string) {
+	<div class="md:col-start-2 md:col-span-6 lg:col-start-2 lg:col-span-5" slot="recommendations">
+		<ul class="flex my-3 col-span-full">
+			for _, rec := range r {
+				if rec == "" {
+					{{ continue }}
+				}
+				<li>
+					<a href={ fmt.Sprintf("/search?q=%s", strings.ReplaceAll(rec, " ", "+")) }>{ rec }</a>
+				</li>
+			}
+		</ul>
+	</div>
+}
+
+type SearchResult struct {
+	URL     string
+	Title   string
+	Snippet string
+}
+
+templ R(slot, r string) {
+	<pre slot="slot"><code>{ r }</code></pre>
+}
+
+templ Results(sr *searxng.SearchResponse) {
+	<div class="md:col-span-6 md:col-start-2 lg:col-start-2 lg:col-span-4" slot="results">
+		<div class="space-y-3 ">
+			for _, result := range sr.Results {
+				<div>
+					<div class="flex">
+						<div class="text-sm text-neutral-400 flex items-center justify-between grow">
+							<div class="flex items-center shrink grow w-0">
+								<img class="w-4 h-4 mr-1" src={ "/icons/" + result.ParsedURL[1] }/>
+								<a href={ result.URL } class="cursor-pointer shrink truncate">{ result.URL }</a>
+							</div>
+							<div class="flex items-center whitespace-nowrap ml-1">
+								Score: { result.Score }
+								if result.Priority != "" {
+									| Priority: { result.Priority }
+								}
+							</div>
+						</div>
+					</div>
+					<a href={ result.URL } class="link">{ result.Title }</a>
+					<div>{ result.Content }</div>
+				</div>
+			}
+		</div>
+	</div>
+}
