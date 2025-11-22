@@ -167,7 +167,7 @@ func Recommendations(r []string) templ.Component {
 			var templ_7745c5c3_Var6 templ.SafeURL
 			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinURLErrs(fmt.Sprintf("/search?q=%s", strings.ReplaceAll(rec, " ", "+")))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/search/search.templ`, Line: 54, Col: 77}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/search/search.templ`, Line: 54, Col: 77}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 			if templ_7745c5c3_Err != nil {
@@ -180,7 +180,7 @@ func Recommendations(r []string) templ.Component {
 			var templ_7745c5c3_Var7 string
 			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(rec)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/search/search.templ`, Line: 54, Col: 85}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/search/search.templ`, Line: 54, Col: 85}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 			if templ_7745c5c3_Err != nil {
@@ -233,7 +233,7 @@ func R(slot, r string) templ.Component {
 		var templ_7745c5c3_Var9 string
 		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(r)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/search/search.templ`, Line: 68, Col: 27}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/search/search.templ`, Line: 68, Col: 27}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 		if templ_7745c5c3_Err != nil {
@@ -280,7 +280,7 @@ func Results(sr *searxng.SearchResponse) templ.Component {
 			var templ_7745c5c3_Var11 string
 			templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinStringErrs("/icons/" + result.ParsedURL[1])
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/search/search.templ`, Line: 79, Col: 71}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/search/search.templ`, Line: 79, Col: 71}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 			if templ_7745c5c3_Err != nil {
@@ -293,7 +293,7 @@ func Results(sr *searxng.SearchResponse) templ.Component {
 			var templ_7745c5c3_Var12 templ.SafeURL
 			templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinURLErrs(result.URL)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/search/search.templ`, Line: 80, Col: 28}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/search/search.templ`, Line: 80, Col: 28}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 			if templ_7745c5c3_Err != nil {
@@ -306,7 +306,7 @@ func Results(sr *searxng.SearchResponse) templ.Component {
 			var templ_7745c5c3_Var13 string
 			templ_7745c5c3_Var13, templ_7745c5c3_Err = templ.JoinStringErrs(result.URL)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/search/search.templ`, Line: 80, Col: 82}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/search/search.templ`, Line: 80, Col: 82}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var13))
 			if templ_7745c5c3_Err != nil {
@@ -319,7 +319,7 @@ func Results(sr *searxng.SearchResponse) templ.Component {
 			var templ_7745c5c3_Var14 string
 			templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(result.Score)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/search/search.templ`, Line: 83, Col: 29}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/search/search.templ`, Line: 83, Col: 29}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 			if templ_7745c5c3_Err != nil {
@@ -337,7 +337,7 @@ func Results(sr *searxng.SearchResponse) templ.Component {
 				var templ_7745c5c3_Var15 string
 				templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(result.Priority)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/search/search.templ`, Line: 85, Col: 38}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/search/search.templ`, Line: 85, Col: 38}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
 				if templ_7745c5c3_Err != nil {
@@ -351,7 +351,7 @@ func Results(sr *searxng.SearchResponse) templ.Component {
 			var templ_7745c5c3_Var16 templ.SafeURL
 			templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinURLErrs(result.URL)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/search/search.templ`, Line: 90, Col: 25}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/search/search.templ`, Line: 90, Col: 25}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
 			if templ_7745c5c3_Err != nil {
@@ -364,7 +364,7 @@ func Results(sr *searxng.SearchResponse) templ.Component {
 			var templ_7745c5c3_Var17 string
 			templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(result.Title)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/search/search.templ`, Line: 90, Col: 55}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/search/search.templ`, Line: 90, Col: 55}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
 			if templ_7745c5c3_Err != nil {
@@ -377,7 +377,7 @@ func Results(sr *searxng.SearchResponse) templ.Component {
 			var templ_7745c5c3_Var18 string
 			templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(result.Content)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `templates/search/search.templ`, Line: 91, Col: 26}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/search/search.templ`, Line: 91, Col: 26}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
 			if templ_7745c5c3_Err != nil {

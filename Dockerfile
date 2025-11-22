@@ -10,9 +10,15 @@ FROM golang:alpine AS buildergo
 WORKDIR /go/src/github.com/AletisSearch/aletis
 COPY go.* ./
 RUN go mod download
+RUN go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest \
+    && go install github.com/a-h/templ/cmd/templ@latest \
+    && go install github.com/tinylib/msgp@latest
 COPY . .
 COPY --from=builder-bun /aletis/dist ./web/dist
 ENV GOEXPERIMENT="jsonv2"
+RUN sqlc generate \
+    && templ generate ./... \
+    && go generate ./...
 RUN --mount=type=cache,target=/root/.cache/go-build go build -ldflags="-s -w" -o ./cmd/aletis/aletis.so ./cmd/aletis
 
 # Docker build
