@@ -70,6 +70,7 @@ func Search(aiClient *aiclient.Client, searchClient *searxng.Client) http.Handle
 		aiEnabled := aiClient != nil
 		c := templates.Layout(search.Head(), search.Body(queryWSpaces, aiEnabled, dataChan))
 
+		w.Header().Add("Cache-Control", "private")
 		w.Header().Set("Content-Type", "text/html")
 		templ.Handler(c, templ.WithStreaming()).ServeHTTP(w, r)
 	}

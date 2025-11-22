@@ -43,6 +43,7 @@ func Assets(dev bool) http.Handler {
 				return
 			}
 		}
+		w.Header().Add("Cache-Control", "public, max-age=2629800")
 		http.FileServer(http.FS(web.AssetsFs)).ServeHTTP(w, r)
 	}))
 }

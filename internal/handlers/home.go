@@ -9,6 +9,7 @@ import (
 
 func Home() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Add("Cache-Control", "private")
 		templates.Layout(home.Head(), home.Body()).Render(r.Context(), w)
 	}
 }
