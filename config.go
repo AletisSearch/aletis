@@ -206,5 +206,12 @@ func NewConfig(options ...Option) (*Config, error) {
 	return conf, nil
 }
 func (c *Config) DBconnStr() string {
-	return "postgresql://" + c.PostgresUsername + ":" + c.PostgresPassword + "@" + c.PostgresDatabase + ":" + c.PostgresPort + "/" + c.PostgresDatabase + "?sslmode=disable"
+	return fmt.Sprintf(
+		"postgresql://%s:%s@%s:%s/%s?sslmode=disable",
+		c.PostgresUsername,
+		c.PostgresPassword,
+		c.PostgresHost,
+		c.PostgresPort,
+		c.PostgresDatabase,
+	)
 }
