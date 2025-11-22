@@ -16,9 +16,10 @@ import (
 )
 
 func NewApp(ctx context.Context, wg *sync.WaitGroup, conf *Config, q *db.Queries) (*chi.Mux, error) {
-
-	aiClient := aiclient.NewClient(conf.OpenAIURL, conf.OpenAIKey, q)
-
+	var aiClient *aiclient.Client
+	if conf.AIEnabled {
+		aiClient = aiclient.NewClient(conf.OpenAIURL, conf.OpenAIKey, q)
+	}
 	searchClient := searxng.NewClient(conf.SearxngHost, q)
 
 	wg.Go(func() {

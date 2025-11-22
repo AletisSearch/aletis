@@ -50,23 +50,25 @@ func Search(aiClient *aiclient.Client, searchClient *searxng.Client) http.Handle
 
 			dataChan <- search.Results(sr)
 		})
-		wg.Go(func() {
-			data, err := aiClient.RunQueryExpand(r.Context(), fmt.Sprintf("[%s]", queryWSpaces))
-			if err != nil {
-				slog.Error("unable to get ai recommendations", "ERROR", err)
-				dataChan <- search.R("recommendations", "Something went wrong")
-				return
-			}
+		if aiClient != nil {
+			wg.Go(func() {
+				data, err := aiClient.RunQueryExpand(r.Context(), fmt.Sprintf("[%s]", queryWSpaces))
+				if err != nil {
+					slog.Error("unable to get ai recommendations", "ERROR", err)
+					dataChan <- search.R("recommendations", "Something went wrong")
+					return
+				}
 
-			dataChan <- search.Recommendations(strings.Split(data.Content, "\n"))
-		})
-
+				dataChan <- search.Recommendations(strings.Split(data.Content, "\n"))
+			})
+		}
 		go func() {
 			wg.Wait()
 			close(dataChan)
 		}()
 
-		c := templates.Layout(search.Head(), search.Body(queryWSpaces, dataChan))
+		aiEnabled := aiClient != nil
+		c := templates.Layout(search.Head(), search.Body(queryWSpaces, aiEnabled, dataChan))
 
 		w.Header().Set("Content-Type", "text/html")
 		templ.Handler(c, templ.WithStreaming()).ServeHTTP(w, r)

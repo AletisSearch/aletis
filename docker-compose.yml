@@ -9,7 +9,7 @@ services:
       # Required
       # See https://searx.space/ for public instances
       # Or host your own https://docs.searxng.org/
-      SEARXNG_HOST: "searxng.example.com"
+      SEARXNG_HOST: "${SEARXNG_HOST}"
       POSTGRES_HOST: "db"
       POSTGRES_PORT: 5432
       POSTGRES_DATABASE: "aletis"

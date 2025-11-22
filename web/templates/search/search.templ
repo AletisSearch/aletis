@@ -12,7 +12,7 @@ templ Head() {
 	<meta name="description" content="Search"/>
 }
 
-templ Body(query string, data chan templ.Component) {
+templ Body(query string, aiEnabled bool, data chan templ.Component) {
 	<div class="flex flex-col grow shrink">
 		<div action="/search" method="get" class="md:grid md:grid-cols-8">
 			<div class="flex items-center md:justify-end-safe md:pr-8">
@@ -26,9 +26,11 @@ templ Body(query string, data chan templ.Component) {
 			@templ.Flush() {
 				<template shadowrootmode="open">
 					<link rel="stylesheet" href="/assets/output.css"/>
-					<slot name="recommendations">
-						<div class="md:col-start-2 md:col-span-6 lg:col-start-2 lg:col-span-5">Loading Recommendations...</div>
-					</slot>
+					if aiEnabled {
+						<slot name="recommendations">
+							<div class="md:col-start-2 md:col-span-6 lg:col-start-2 lg:col-span-5">Loading Recommendations...</div>
+						</slot>
+					}
 					<slot name="results">
 						<div class="md:col-start-2 md:col-span-6 lg:col-start-2 lg:col-span-5">Loading Results...</div>
 					</slot>
