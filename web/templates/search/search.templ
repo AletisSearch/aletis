@@ -3,6 +3,7 @@ package search
 import (
 	"fmt"
 	"github.com/AletisSearch/aletis/internal/searxng"
+	"github.com/AletisSearch/aletis/web"
 	"github.com/AletisSearch/aletis/web/templates/components"
 	"strings"
 )
@@ -25,7 +26,7 @@ templ Body(query string, aiEnabled bool, data chan templ.Component) {
 		<div class="md:grid md:grid-cols-8">
 			@templ.Flush() {
 				<template shadowrootmode="open">
-					<link rel="stylesheet" href="/assets/output.css"/>
+					<link rel="stylesheet" href={ web.GetAssetUri("main.css") }/>
 					if aiEnabled {
 						<slot name="recommendations">
 							<div class="md:col-start-2 md:col-span-6 lg:col-start-2 lg:col-span-5">Loading Recommendations...</div>
