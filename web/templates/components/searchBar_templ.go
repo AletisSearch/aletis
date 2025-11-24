@@ -34,7 +34,7 @@ func SearchBar(o SearchBarOptions) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<form action=\"/search\" method=\"get\" class=\"flex w-full p-2 border-2 rounded-lg bg-neutral-900 border-neutral-700 grow\"><label for=\"q\" class=\"sr-only\">Search</label> <input type=\"text\" name=\"q\" id=\"q\" size=\"1\" value=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<form action=\"/search\" method=\"get\" class=\"flex w-full p-2 border-2 rounded-lg bg-neutral-900 border-neutral-700/50 grow focus-within:border-neutral-600/50\"><label for=\"q\" class=\"sr-only\">Search</label> <input type=\"text\" name=\"q\" id=\"q\" size=\"1\" value=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -57,7 +57,7 @@ func SearchBar(o SearchBarOptions) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "> <input type=\"submit\" value=\"Submit\" class=\"bg-blue-700 hover:bg-blue-800 py-1 px-1.5 cursor-pointer rounded-lg\"></form>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "> <input type=\"submit\" value=\"Submit\" class=\"text-sky-200 bg-sky-600/15 hover:bg-sky-600/25 border border-sky-600/25 py-1 px-1.5 cursor-pointer rounded-lg\"></form>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

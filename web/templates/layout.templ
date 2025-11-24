@@ -3,7 +3,7 @@ package templates
 import "github.com/AletisSearch/aletis/web"
 
 templ main(body templ.Component) {
-	<main id="main" class="flex flex-1 grow font-sans text-base sm:text-lg">
+	<main id="main" class="flex flex-1 font-sans text-base grow sm:text-lg">
 		@body
 	</main>
 }
@@ -17,8 +17,8 @@ templ Layout(head, body templ.Component) {
 			@head
 			<link rel="stylesheet" href={ web.GetAssetUri("main.css") }/>
 		</head>
-		<body class="bg-neutral-950 text-neutral-200 flex min-h-screen min-w-full">
-			<div class="mx-auto flex grow flex-col px-3 sm:px-6">
+		<body class="flex min-w-full min-h-screen bg-neutral-950 text-neutral-200">
+			<div class="flex flex-col px-3 mx-auto grow sm:px-6">
 				@main(body)
 			</div>
 		</body>
