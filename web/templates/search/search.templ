@@ -47,17 +47,19 @@ templ Body(query string, aiEnabled bool, data chan templ.Component) {
 }
 
 templ Recommendations(r []string) {
-	<div class="md:col-start-2 md:col-span-6 lg:col-start-2 lg:col-span-5" slot="recommendations">
-		<ul class="flex my-3 col-span-full">
-			for _, rec := range r {
-				if rec == "" {
-					{{ continue }}
+	<div class="md:col-start-2 md:col-span-6 lg:col-start-2 lg:col-span-5 overflow-auto" slot="recommendations">
+		<div class="grid grid-cols-1">
+			<ul class="col-start-1 flex flex-nowrap gap-4 rounded-lg row-start-1">
+				for _, rec := range r {
+					if rec == "" {
+						{{ continue }}
+					}
+					<li class="text-pretty line-clamp-2 max-w-56 shrink-0 w-fit">
+						<a href={ fmt.Sprintf("/search?q=%s", strings.ReplaceAll(rec, " ", "+")) }>{ rec }</a>
+					</li>
 				}
-				<li>
-					<a href={ fmt.Sprintf("/search?q=%s", strings.ReplaceAll(rec, " ", "+")) }>{ rec }</a>
-				</li>
-			}
-		</ul>
+			</ul>
+		</div>
 	</div>
 }
 

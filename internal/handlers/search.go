@@ -14,12 +14,6 @@ import (
 	"github.com/a-h/templ"
 )
 
-type sd struct {
-	Title string
-	URL   string
-	MD    string
-}
-
 func Search(aiClient *aiclient.Client, searchClient *searxng.Client) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		query := strings.TrimSpace(r.URL.Query().Get("q"))
@@ -70,8 +64,6 @@ func Search(aiClient *aiclient.Client, searchClient *searxng.Client) http.Handle
 		aiEnabled := aiClient != nil
 		c := templates.Layout(search.Head(), search.Body(queryWSpaces, aiEnabled, dataChan))
 
-		w.Header().Add("Cache-Control", "private")
-		w.Header().Set("Content-Type", "text/html; charset=UTF-8")
 		templ.Handler(c, templ.WithStreaming()).ServeHTTP(w, r)
 	}
 }

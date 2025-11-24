@@ -1,5 +1,6 @@
 {
   "scripts": {
+    "dev": "vite build --watch",
     "build": "vite build"
   },
   "dependencies": {

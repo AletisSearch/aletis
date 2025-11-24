@@ -9,7 +9,8 @@ import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
 type SearchBarOptions struct {
-	Value string
+	Value     string
+	AutoFocus bool
 }
 
 func SearchBar(o SearchBarOptions) templ.Component {
@@ -40,13 +41,23 @@ func SearchBar(o SearchBarOptions) templ.Component {
 		var templ_7745c5c3_Var2 string
 		templ_7745c5c3_Var2, templ_7745c5c3_Err = templ.JoinStringErrs(o.Value)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/components/searchBar.templ`, Line: 10, Col: 61}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/components/searchBar.templ`, Line: 11, Col: 61}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" class=\"flex-1 p-1 border-0 border-none outline-none items-center-safe placeholder:text-white\" placeholder=\"Search...\" required> <input type=\"submit\" value=\"Submit\" class=\"bg-blue-700 hover:bg-blue-800 py-1 px-1.5 cursor-pointer rounded-lg\"></form>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" class=\"flex-1 p-1 border-0 border-none outline-none items-center-safe placeholder:text-white\" placeholder=\"Search...\" required")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if o.AutoFocus {
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, " autofocus")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "> <input type=\"submit\" value=\"Submit\" class=\"bg-blue-700 hover:bg-blue-800 py-1 px-1.5 cursor-pointer rounded-lg\"></form>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

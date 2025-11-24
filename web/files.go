@@ -6,8 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"io/fs"
-	"log/slog"
-	"os"
 )
 
 //go:embed dist/**
@@ -36,39 +34,6 @@ var ErrFileNotFound = errors.New("file not found")
 
 var pManifest Manifest
 
-var IsDev = false
-
-func init() {
-	if IsDev {
-		rootfs, err := os.OpenRoot("./web/dist")
-		dynamicFS = rootfs.FS()
-		if err != nil {
-			slog.Error("failed to open web/dist root filesystem", "error", err)
-			os.Exit(1)
-		}
-		if AssetsFs, err = fs.Sub(dynamicFS, "assets"); err != nil {
-			slog.Error("failed to create assets sub-filesystem (dev)", "error", err)
-			os.Exit(1)
-		}
-		return
-	}
-
-	var err error
-	if AssetsFs, err = fs.Sub(staticFs, "dist/assets"); err != nil {
-		slog.Error("failed to create assets sub-filesystem (prod)", "error", err)
-		os.Exit(1)
-	}
-	f, err := staticFs.ReadFile("dist/.vite/manifest.json")
-	if err != nil {
-		slog.Error("failed to read manifest.json", "error", err)
-		os.Exit(1)
-	}
-	if err = json.Unmarshal(f, &pManifest); err != nil {
-		slog.Error("failed to unmarshal manifest.json", "error", err)
-		os.Exit(1)
-	}
-}
-
 func GetAssetUri(name string) (string, error) {
 	if IsDev {
 		return "/assets/" + name, nil
@@ -93,7 +58,6 @@ func GetFilepath(name string) (string, error) {
 		if err = json.UnmarshalRead(f, &m); err != nil {
 			return "", fmt.Errorf("failed to unmarshal manifest.json in GetAssetUr: %w", err)
 		}
-
 		chunk, ok = m[name]
 	} else {
 		chunk, ok = pManifest[name]

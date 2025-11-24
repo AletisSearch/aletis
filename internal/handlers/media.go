@@ -18,32 +18,33 @@ func Assets(dev bool) http.Handler {
 		if dev {
 			p, err := web.GetFilepath(r.URL.Path)
 			if err != nil {
-				slog.Error("Err getting filepath", "ERR", err)
 				if !errors.Is(err, web.ErrFileNotFound) {
+					slog.Error("Err getting filepath", "ERR", err)
 					w.WriteHeader(http.StatusInternalServerError)
 					return
 				}
 			}
 			rp, err := web.GetFilepath(r.URL.RawPath)
 			if err != nil {
-				slog.Error("Err getting filepath", "ERR", err)
 				if !errors.Is(err, web.ErrFileNotFound) {
+					slog.Error("Err getting filepath", "ERR", err)
 					w.WriteHeader(http.StatusInternalServerError)
 					return
 				}
 			}
-			if p != "" && rp != "" {
+			if p != "" || rp != "" {
 				r2 := new(http.Request)
 				*r2 = *r
 				r2.URL = new(url.URL)
 				*r2.URL = *r.URL
 				r2.URL.Path = p
 				r2.URL.RawPath = rp
+				w.Header().Set("Cache-Control", "no-cache")
 				http.StripPrefix("/assets/", http.FileServer(http.FS(web.AssetsFs))).ServeHTTP(w, r2)
 				return
 			}
 		}
-		w.Header().Add("Cache-Control", "public, max-age=2629800")
+		w.Header().Add("Cache-Control", "public, max-age=2629800, immutable")
 		http.FileServer(http.FS(web.AssetsFs)).ServeHTTP(w, r)
 	}))
 }

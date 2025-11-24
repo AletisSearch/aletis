@@ -6,8 +6,6 @@ import (
 	"os"
 	"strconv"
 	"strings"
-
-	"github.com/AletisSearch/aletis/web"
 )
 
 type Config struct {
@@ -221,7 +219,6 @@ func NewConfig(options ...Option) (*Config, error) {
 		return nil, errors.New("POSTGRES_PASSWORD is not set")
 	}
 
-	web.IsDev = conf.Dev
 	return conf, nil
 }
 func (c *Config) DBconnStr() string {
