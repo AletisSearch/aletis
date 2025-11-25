@@ -176,7 +176,7 @@ func Recommendations(r []string) templ.Component {
 			templ_7745c5c3_Var6 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<div class=\"mb-2 border-b-2 border-neutral-600/50 md:col-start-2 md:col-span-6 lg:col-start-2 lg:col-span-5\" slot=\"recommendations\"><div class=\"my-2 overflow-auto rounded-lg\"><h2 class=\"mt-1 text-xs text-neutral-400 ms-1\">Search Recommendations:</h2><div class=\"mx-auto shadow-xl mt-1\"><ul class=\"flex overflow-x-auto mx-0.5 gap-2 text-sm\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 9, "<div class=\"mb-3 border-b-2 border-neutral-600/50 md:col-start-2 md:col-span-6 lg:col-start-2 lg:col-span-5\" slot=\"recommendations\"><div class=\"overflow-auto rounded-lg\"><h2 class=\"mt-2 text-xs text-neutral-400 ms-1\">Search Recommendations:</h2><div class=\"grid mx-auto shadow-xl mt-1\"><ul class=\"flex overflow-x-auto mx-0.5 gap-2 text-sm pb-3\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -341,9 +341,9 @@ func Results(sr *searxng.SearchResponse) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var15 string
-			templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(result.Score)
+			templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprintf("%-4.2f", result.Score))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/search/search.templ`, Line: 93, Col: 29}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `web/templates/search/search.templ`, Line: 93, Col: 52}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
 			if templ_7745c5c3_Err != nil {

@@ -57,7 +57,7 @@ func SearchBar(o SearchBarOptions) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "> <input type=\"submit\" value=\"Submit\" class=\"text-sky-200 bg-sky-600/15 hover:bg-sky-600/25 border border-sky-600/25 py-1 px-1.5 cursor-pointer rounded-lg\"></form>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "> <input type=\"submit\" value=\"Submit\" class=\"flex-none text-sky-200 bg-sky-600/15 hover:bg-sky-600/25 border border-sky-600/25 py-1 px-1.5 cursor-pointer rounded-lg\"></form>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
