@@ -6,13 +6,16 @@ RUN bun install
 COPY ./web .
 RUN bun run build
 
-FROM golang:alpine AS buildergo
+FROM golang:alpine AS modules
 WORKDIR /go/src/github.com/AletisSearch/aletis
 COPY go.* ./
 RUN go mod download
 RUN go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest \
     && go install github.com/a-h/templ/cmd/templ@latest \
     && go install github.com/tinylib/msgp@latest
+
+FROM modules AS buildergo
+WORKDIR /go/src/github.com/AletisSearch/aletis
 COPY . .
 COPY --from=builder-bun /aletis/dist ./web/dist
 RUN sqlc generate \
@@ -21,7 +24,7 @@ RUN sqlc generate \
 RUN --mount=type=cache,target=/root/.cache/go-build go build -tags 'goexperiment.jsonv2' -ldflags="-s -w" -o ./cmd/aletis/aletis.so ./cmd/aletis
 
 # Docker build
-FROM alpine:latest
+FROM alpine:latest as web
 
 RUN apk --no-cache -U upgrade \
     && apk --no-cache add --upgrade ca-certificates \

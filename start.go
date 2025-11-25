@@ -19,7 +19,12 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-func Start(options ...Option) error {
+func init() {
+	location, _ := time.LoadLocation("UTC")
+	time.Local = location
+}
+
+func StartWebServer(options ...Option) error {
 	var wg sync.WaitGroup
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
