@@ -9,6 +9,7 @@ import (
 	"time"
 
 	aiclient "github.com/AletisSearch/aletis/internal/aiClient"
+	"github.com/AletisSearch/aletis/internal/config"
 	"github.com/AletisSearch/aletis/internal/db"
 	"github.com/AletisSearch/aletis/internal/handlers"
 	"github.com/AletisSearch/aletis/internal/searxng"
@@ -18,7 +19,7 @@ import (
 	"github.com/go-chi/httprate"
 )
 
-func NewApp(ctx context.Context, wg *sync.WaitGroup, conf *Config, q *db.Queries) (*chi.Mux, error) {
+func NewApp(ctx context.Context, wg *sync.WaitGroup, conf *config.Config, q *db.Queries) (*chi.Mux, error) {
 	var aiClient *aiclient.Client
 	if conf.AIEnabled {
 		aiClient = aiclient.NewClient(conf.OpenAIURL, conf.OpenAIKey, q)

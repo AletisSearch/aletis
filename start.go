@@ -13,6 +13,7 @@ import (
 	"time"
 
 	sqlcdb "github.com/AletisSearch/aletis/db"
+	"github.com/AletisSearch/aletis/internal/config"
 	"github.com/AletisSearch/aletis/internal/db"
 	"github.com/amacneil/dbmate/v2/pkg/dbmate"
 	_ "github.com/amacneil/dbmate/v2/pkg/driver/postgres"
@@ -24,14 +25,17 @@ func init() {
 	time.Local = location
 }
 
-func StartWebServer(options ...Option) error {
+func StartWebServer(options ...config.Option) error {
 	var wg sync.WaitGroup
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	conf, err := NewConfig(options...)
+	conf, err := config.NewConfig(options...)
 	if err != nil {
 		return fmt.Errorf("failed to create config: %w", err)
+	}
+	if err = conf.Validate(config.ValidDefault); err != nil {
+		return fmt.Errorf("failed to validate config: %w", err)
 	}
 
 	// Database
@@ -112,7 +116,7 @@ func StartWebServer(options ...Option) error {
 
 	return nil
 }
-func applyMigrations(conf *Config) error {
+func applyMigrations(conf *config.Config) error {
 	u, _ := url.Parse(conf.DBconnStr())
 	db := dbmate.New(u)
 	db.FS = sqlcdb.FS

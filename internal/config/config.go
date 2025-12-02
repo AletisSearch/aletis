@@ -1,8 +1,9 @@
-package aletis
+package config
 
 import (
 	"errors"
 	"fmt"
+	"log/slog"
 	"os"
 	"strconv"
 	"strings"
@@ -24,6 +25,7 @@ type Config struct {
 }
 
 type Option func(*Config) error
+type Validation func(*Config) error
 
 func WithDevString(dev string) Option {
 	return func(c *Config) error {
@@ -120,6 +122,58 @@ func WithPostgresPassword(password string) Option {
 		return nil
 	}
 }
+func ValidSearxngHost(c *Config) error {
+	if c.SearxngHost == "" {
+		return errors.New("SEARXNG_HOST is not set")
+	}
+	return nil
+}
+func ValidAi(c *Config) error {
+	// OpenAI configuration is only required if AI is enabled
+	if c.AIEnabled {
+		if c.OpenAIKey == "" {
+			return errors.New("OPENAI_API_KEY is not set")
+		}
+		if c.OpenAIURL == "" {
+			// Set default OpenAI URL if not provided
+			c.OpenAIURL = "https://openrouter.ai/api/v1"
+			slog.Warn("missing OpenAIURL using default", "Default", c.OpenAIURL)
+		}
+	}
+	return nil
+}
+
+func ValidPostgres(c *Config) error {
+	if c.PostgresHost == "" {
+		return errors.New("POSTGRES_HOST is not set")
+	}
+	if c.PostgresDatabase == "" {
+		return errors.New("POSTGRES_DATABASE is not set")
+	}
+	if c.PostgresUsername == "" {
+		return errors.New("POSTGRES_USERNAME is not set")
+	}
+	if c.PostgresPassword == "" {
+		return errors.New("POSTGRES_PASSWORD is not set")
+	}
+	return nil
+}
+
+func ValidDefault(c *Config) (err error) {
+	if err = ValidSearxngHost(c); err != nil {
+		return err
+	}
+
+	if err = ValidAi(c); err != nil {
+		return err
+	}
+
+	if err = ValidPostgres(c); err != nil {
+		return err
+	}
+
+	return nil
+}
 
 func EnvConfigOptions() []Option {
 	confOptions := []Option{
@@ -190,37 +244,21 @@ func NewConfig(options ...Option) (*Config, error) {
 		}
 	}
 
-	if conf.SearxngHost == "" {
-		return nil, errors.New("SEARXNG_HOST is not set")
-	}
-
-	// OpenAI configuration is only required if AI is enabled
-	if conf.AIEnabled {
-		if conf.OpenAIKey == "" {
-			return nil, errors.New("OPENAI_API_KEY is not set")
-		}
-		if conf.OpenAIURL == "" {
-			// Set default OpenAI URL if not provided
-			conf.OpenAIURL = "https://openrouter.ai/api/v1"
-		}
-	}
-
-	// PostgreSQL configuration validation
-	if conf.PostgresHost == "" {
-		return nil, errors.New("POSTGRES_HOST is not set")
-	}
-	if conf.PostgresDatabase == "" {
-		return nil, errors.New("POSTGRES_DATABASE is not set")
-	}
-	if conf.PostgresUsername == "" {
-		return nil, errors.New("POSTGRES_USERNAME is not set")
-	}
-	if conf.PostgresPassword == "" {
-		return nil, errors.New("POSTGRES_PASSWORD is not set")
-	}
-
 	return conf, nil
 }
+
+func (c *Config) Validate(validators ...Validation) error {
+	if len(validators) == 0 {
+		return ValidDefault(c)
+	}
+	for _, v := range validators {
+		if err := v(c); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 func (c *Config) DBconnStr() string {
 	return fmt.Sprintf(
 		"postgresql://%s:%s@%s:%s/%s?sslmode=disable",
