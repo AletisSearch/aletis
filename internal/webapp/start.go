@@ -1,11 +1,10 @@
-package aletis
+package webapp
 
 import (
 	"context"
 	"fmt"
 	"log/slog"
 	"net/http"
-	"net/url"
 	"os"
 	"os/signal"
 	"sync"
@@ -15,7 +14,6 @@ import (
 	sqlcdb "github.com/AletisSearch/aletis/db"
 	"github.com/AletisSearch/aletis/internal/config"
 	"github.com/AletisSearch/aletis/internal/db"
-	"github.com/amacneil/dbmate/v2/pkg/dbmate"
 	_ "github.com/amacneil/dbmate/v2/pkg/driver/postgres"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -25,7 +23,7 @@ func init() {
 	time.Local = location
 }
 
-func StartWebServer(options ...config.Option) error {
+func Start(options ...config.Option) error {
 	var wg sync.WaitGroup
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
@@ -39,7 +37,7 @@ func StartWebServer(options ...config.Option) error {
 	}
 
 	// Database
-	if err = applyMigrations(conf); err != nil {
+	if err = sqlcdb.ApplyMigrations(conf); err != nil {
 		return err
 	}
 
@@ -114,26 +112,5 @@ func StartWebServer(options ...config.Option) error {
 
 	wg.Wait()
 
-	return nil
-}
-func applyMigrations(conf *config.Config) error {
-	u, _ := url.Parse(conf.DBconnStr())
-	db := dbmate.New(u)
-	db.FS = sqlcdb.FS
-	db.MigrationsDir = []string{"./migrations"}
-
-	migrations, err := db.FindMigrations()
-	if err != nil {
-		return err
-	}
-	for _, m := range migrations {
-		slog.Info("Migration:", "Version", m.Version, "Path", m.FilePath, "Applied", m.Applied)
-	}
-
-	slog.Info("Applying migrations...")
-	err = db.CreateAndMigrate()
-	if err != nil {
-		return err
-	}
 	return nil
 }

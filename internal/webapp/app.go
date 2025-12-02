@@ -1,4 +1,4 @@
-package aletis
+package webapp
 
 import (
 	"context"
